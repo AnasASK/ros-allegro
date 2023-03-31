@@ -4,7 +4,7 @@
 hand_info:
  control_period_s: 0.003
  DOF: 16
- which_hand: 'Right'
+ which_hand: 'Left'
  robot_name: 'Allegro Hand'
  manufacturer: 'Wonikrobotics Co. Ltd.'
  origin: 'Seoul, South Korea'

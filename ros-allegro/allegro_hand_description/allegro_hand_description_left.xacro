@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="allegro_hand_right">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="allegro_hand_left">
 
     <xacro:property name="DEG2RAD" value="0.01745329251"/>
 
@@ -14,8 +14,8 @@
     <xacro:property name="link2_z" value="0.0384"/>
 
     <!-- full height from joint to tip. when used,
-    the radius of the finger tip sphere will be subtracted
-    and one fixed link will be added for the tip. -->
+         the radius of the finger tip sphere will be subtracted
+         and one fixed link will be added for the tip. -->
     <xacro:property name="link3_z" value="0.0387"/>
     <xacro:property name="fingerTip_r" value="0.0120"/>
     <xacro:property name="offset_origin_x_const" value="0"/>
@@ -52,13 +52,24 @@
 
     <!-- ============================================================================= -->
 
+    <!-- Base link -->
+    <link name="hand_root">
+      <origin xyz="0 0 0"/>
+    </link>
+
+    <joint name="root_to_base" type="fixed">
+      <parent link="hand_root"/>
+      <child link="palm_link"/>
+      <origin xyz="0 0 ${palm_link_z}"/>
+    </joint>
+
     <!-- PALM -->
     <link name="palm_link">
         <visual>
             <geometry>
-                <mesh filename="package://allegro_hand_description/meshes/base_link.STL"/>
+                <mesh filename="package://allegro_hand_description/meshes/base_link_left.STL"/>
             </geometry>
-            <origin rpy="0 0 0" xyz="0 0 0 "/>
+            <origin rpy="${-90*DEG2RAD} 0 0" xyz="0 0 0 "/>
             <material name="black">
                 <color rgba="0.2 0.2 0.2 1"/>
             </material>
@@ -70,31 +81,40 @@
                 <box size="0.0408 0.1130 ${palm_link_z}"/>
             </geometry>
         </collision>
+        <inertial>
+          <origin xyz="0 0 ${palm_link_z/2}" rpy="0 0 0"/>
+          <mass value="0.4154"/>
+          <inertia
+              ixx="1e-4" ixy="0.0" ixz="0.0"
+              iyy="1e-4" iyz="0.0"
+              izz="1e-4"/>
+        </inertial>
     </link>
 
     <!-- ============================================================================= -->
 
     <!-- THUMB MACRO -->
-    <xacro:macro name="thumb_right"
+    <xacro:macro name="thumb_left"
                  params="finger_num offset_origin_x offset_origin_y offset_origin_z finger_angle_r finger_angle_p finger_angle_y">
 
         <!-- [LINK 12] -->
         <link name="link_${finger_num*4+0}">
             <visual>
                 <geometry>
-                    <mesh filename="package://allegro_hand_description/meshes/link_12.0_right.STL"/>
+                    <mesh filename="package://allegro_hand_description/meshes/link_12.0_left.STL"/>
                 </geometry>
                 <material name="black">
                     <color rgba=".2 .2 .2 1"/>
                 </material>
-                <origin rpy="${DEG2RAD} 0 0" xyz="0 0 0"/>
+                <origin rpy="${180*DEG2RAD} 0 0" xyz="0 0 0"/>
             </visual>
 
             <collision>
                 <geometry>
                     <box size="${link0_t_x} ${link0_t_y} ${link0_t_z}"/>
                 </geometry>
-                <origin rpy="0 0 0" xyz="${-0.0358/2+0.0} ${.018/2} ${.029/2}"/>
+                <origin rpy="0 0 0"
+                        xyz="${-0.0358/2+0.0} ${-.018/2} ${.029/2}"/>
             </collision>
 
             <inertial>
@@ -106,8 +126,8 @@
             </inertial>
         </link>
 
-        <joint name="joint_${finger_num*4+0}.0" type="revolute">
-            <axis xyz="-1 0 0"/>
+        <joint name="joint_${finger_num*4+0}" type="revolute">
+            <axis xyz="+1 0 0"/>
             <limit effort="15" velocity="7"
                    lower="${limit_0_t_low-joint_safety_margin}"
                    upper="${limit_0_t_up-joint_safety_margin}"/>
@@ -145,15 +165,15 @@
             </inertial>
         </link>
 
-        <joint name="joint_${finger_num*4+1}.0" type="revolute">
-            <axis xyz="0 0 1"/>
+        <joint name="joint_${finger_num*4+1}" type="revolute">
+            <axis xyz="0 0 -1"/>
             <limit effort="15" velocity="7"
                    lower="${limit_1_t_low+joint_safety_margin}"
                    upper="${limit_1_t_up-joint_safety_margin}"/>
             <parent link="link_${finger_num*4+0}"/>
             <child link="link_${finger_num*4+1}"/>
-            <origin xyz="-0.027 0.005 0.0399"/>
-            <dynamics damping="3" friction="5"/>
+            <origin xyz="-0.027 -0.005 0.0399"/>
+			<dynamics damping="3" friction="5"/>
         </joint>
 
         <!-- [LINK 14] -->
@@ -181,7 +201,7 @@
             </inertial>
         </link>
 
-        <joint name="joint_${finger_num*4+2}.0" type="revolute">
+        <joint name="joint_${finger_num*4+2}" type="revolute">
             <axis xyz="0 1 0"/>
             <limit effort="15" velocity="7"
                    lower="${limit_2_t_low+joint_safety_margin}"
@@ -218,7 +238,7 @@
             </inertial>
         </link>
 
-        <joint name="joint_${finger_num*4+3}.0" type="revolute">
+        <joint name="joint_${finger_num*4+3}" type="revolute">
             <axis xyz="0 1 0"/>
             <limit effort="15" velocity="7"
                    lower="${limit_3_t_low+joint_safety_margin}"
@@ -235,6 +255,7 @@
                 <geometry>
                     <mesh filename="package://allegro_hand_description/meshes/link_15.0_tip.STL"/>
                 </geometry>
+
                 <material name="white">
                     <color rgba=".9 .9 .9 1"/>
                 </material>
@@ -256,7 +277,7 @@
             </inertial>
         </link>
 
-        <joint name="joint_${finger_num*4+3}.0_tip" type="fixed">
+        <joint name="joint_${finger_num*4+3}_tip" type="fixed">
             <parent link="link_${finger_num*4+3}"/>
             <child link="link_${finger_num*4+3}_tip"/>
             <origin rpy="0 0 0" xyz="0 0 ${link3_t_z-fingerTip_r}"/>
@@ -293,7 +314,7 @@
             </inertial>
         </link>
 
-        <joint name="joint_${finger_num*4+0}.0" type="revolute">
+        <joint name="joint_${finger_num*4+0}" type="revolute">
             <axis xyz="0 0 1"/>
             <limit effort="15" velocity="7"
                    lower="${limit_0_low+joint_safety_margin}"
@@ -329,7 +350,7 @@
             </inertial>
         </link>
 
-        <joint name="joint_${finger_num*4+1}.0" type="revolute">
+        <joint name="joint_${finger_num*4+1}" type="revolute">
             <limit effort="15" velocity="7"
                    lower="${limit_1_low+joint_safety_margin}"
                    upper="${limit_1_up-joint_safety_margin}"/>
@@ -365,7 +386,7 @@
             </inertial>
         </link>
 
-        <joint name="joint_${finger_num*4+2}.0" type="revolute">
+        <joint name="joint_${finger_num*4+2}" type="revolute">
             <axis xyz="0 1 0"/>
             <limit effort="15" velocity="7"
                    lower="${limit_2_low+joint_safety_margin}"
@@ -401,7 +422,7 @@
             </inertial>
         </link>
 
-        <joint name="joint_${finger_num*4+3}.0" type="revolute">
+        <joint name="joint_${finger_num*4+3}" type="revolute">
             <axis xyz="0 1 0"/>
             <limit effort="15" velocity="7"
                    lower="${limit_3_low+joint_safety_margin}"
@@ -437,20 +458,19 @@
                        izz="9.68e-07" />
             </inertial>
         </link>
-        <joint name="joint_${finger_num*4+3}.0_tip" type="fixed">
+
+        <joint name="joint_${finger_num*4+3}_tip" type="fixed">
             <parent link="link_${finger_num*4+3}"/>
             <child link="link_${finger_num*4+3}_tip"/>
             <origin rpy="0 0 0" xyz="0 0 ${link3_z-fingerTip_r}"/>
         </joint>
     </xacro:macro>
     <!-- [[END]] THREE FINGER MACRO -->
-
-    <!-- ============================================================================= -->
-    <!-- FINGERS -->
+	<!-- FINGERS -->
     <!-- RIGHT HAND due to which finger is number 0 -->
     <!-- for LEFT HAND switch the sign of the **offset_origin_y** and **finger_angle_r** parameters-->
     <xacro:finger
-            finger_num="0"
+            finger_num="2"
             offset_origin_x="${offset_origin_x_const}"
             offset_origin_y="${offset_origin_y_const}"
             offset_origin_z="${offset_origin_z_const}"
@@ -464,20 +484,23 @@
             finger_angle_r="0.0"
             />
     <xacro:finger
-            finger_num="2"
+            finger_num="0"
             offset_origin_x="${offset_origin_x_const}"
             offset_origin_y="-${offset_origin_y_const}"
             offset_origin_z="${offset_origin_z_const}"
             finger_angle_r="${5.0*DEG2RAD}"
             />
     <!-- THUMB -->
-    <xacro:thumb_right
+    <xacro:thumb_left
             finger_num="3"
             offset_origin_x="-0.0182"
-            offset_origin_y="0.019333"
+            offset_origin_y="-0.019333"
             offset_origin_z="-0.045987"
             finger_angle_r="0"
             finger_angle_p="-${95*DEG2RAD}"
-            finger_angle_y="-${90*DEG2RAD}"
+            finger_angle_y="${90*DEG2RAD}"
             />
+
+    <!-- ============================================================================= -->
+
 </robot>

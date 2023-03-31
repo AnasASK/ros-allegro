@@ -36,7 +36,11 @@ Can use `rostopic list` to monitor the ROS topics.
 Try a communication with hand
 ```
 # need to change /dev/pcanusbfd32 to your usb name
-roslaunch allegro_hand allegro_hand.launch HAND:=right AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusbfd32 KEYBOARD:=false
+conda activate rosallegro
+roslaunch allegro_hand allegro_hand.launch HAND:=right AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=false
+roslaunch allegro_hand allegro_hand.launch HAND:=left AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=false CONTROLLER:=pd
+roslaunch allegro_hand allegro_hand.launch HAND:=left AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=true CONTROLLER:=pd
+
 ```
 
 Make sure `rostopic list` will display something like:
