@@ -3,24 +3,26 @@
 # P and D gains for each of the 16 joints.
 
 # proportional
+# Haozhi Qi:  Try to increase the P values in this file. 
+# I tried values from 3600 to 6000 and found the policy performs better.
 gains_pd:
  p:
-  j00: 3600.0
-  j01: 3600.0
-  j02: 3600.0
-  j03: 3600.0
-  j10: 3600.0
-  j11: 3600.0
-  j12: 3600.0
-  j13: 3600.0
-  j20: 3600.0
-  j21: 3600.0
-  j22: 3600.0
-  j23: 3600.0
-  j30: 3600.0
-  j31: 3600.0
-  j32: 3600.0
-  j33: 3600.0
+  j00: 6000.0
+  j01: 6000.0
+  j02: 6000.0
+  j03: 6000.0
+  j10: 6000.0
+  j11: 6000.0
+  j12: 6000.0
+  j13: 6000.0
+  j20: 6000.0
+  j21: 6000.0
+  j22: 6000.0
+  j23: 6000.0
+  j30: 6000.0
+  j31: 6000.0
+  j32: 6000.0
+  j33: 6000.0
 #derivative3
  d:
   j00: 120.0

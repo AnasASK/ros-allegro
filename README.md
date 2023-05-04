@@ -29,17 +29,19 @@ catkin_make install
 source ./devel/setup.zsh # or other shell name
 ```
 
-### Instructions
+### Hardware 
+- Connect the PCAN USB adapter to the arm, and the power supply 
+- Turn on the Allegro power (you will hear a sound)
+
+### Runtime instructions
 
 Can use `rostopic list` to monitor the ROS topics.
 
 Try a communication with hand
 ```
-# need to change /dev/pcanusbfd32 to your usb name
 conda activate rosallegro
-roslaunch allegro_hand allegro_hand.launch HAND:=right AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=false
-roslaunch allegro_hand allegro_hand.launch HAND:=left AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=false CONTROLLER:=pd
-roslaunch allegro_hand allegro_hand.launch HAND:=left AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=true CONTROLLER:=pd
+roslaunch allegro_hand allegro_hand.launch HAND:=left AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=false CONTROLLER:=pd # left hand
+roslaunch allegro_hand allegro_hand.launch HAND:=right AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=false # right hand
 
 ```
 
