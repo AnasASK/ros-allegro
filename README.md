@@ -41,7 +41,7 @@ Try a communication with hand
 ```
 conda activate rosallegro
 roslaunch allegro_hand allegro_hand.launch HAND:=left AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=false CONTROLLER:=pd # left hand
-roslaunch allegro_hand allegro_hand.launch HAND:=right AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=false # right hand
+roslaunch allegro_hand allegro_hand.launch HAND:=right AUTO_CAN:=false CAN_DEVICE:=/dev/pcanusb32 KEYBOARD:=false CONTROLLER:=pd # right hand
 
 ```
 
